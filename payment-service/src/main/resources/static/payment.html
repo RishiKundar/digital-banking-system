@@ -1,0 +1,819 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f8ff">
+    <title>Secure Checkout | Northstar Banking</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1764f5;
+            --primary-dark: #124bc2;
+            --text: #142342;
+            --muted: #71819d;
+            --border: #e3eaf5;
+            --surface: #ffffff;
+            --background: #f5f8ff;
+            --success: #168454;
+            --danger: #c43d4b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 0% 100%, #dceaff 0, transparent 42%),
+                radial-gradient(ellipse at 100% 0%, #e1edff 0, transparent 38%),
+                var(--background);
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .topbar {
+            min-height: 82px;
+            padding: 18px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: linear-gradient(145deg, #3888ff, #124bc2);
+            color: white;
+            font-size: 25px;
+        }
+
+        .brand-light {
+            color: #53698c;
+            font-weight: 500;
+        }
+
+        .security-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lock-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            background: #eaf2ff;
+            border-radius: 50%;
+            color: var(--primary);
+            font-size: 19px;
+        }
+
+        .security-header strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .security-header span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        main {
+            padding: 46px 18px 56px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .checkout-card {
+            width: 100%;
+            max-width: 760px;
+            padding: 38px;
+            border: 1px solid rgba(225, 233, 246, 0.9);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 24px 75px rgba(37, 83, 151, 0.12);
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            font-size: clamp(26px, 4vw, 35px);
+            letter-spacing: -1.3px;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 22px;
+            border-radius: 16px;
+            background: linear-gradient(120deg, #f0f6ff, #f7faff);
+            margin-bottom: 14px;
+        }
+
+        .summary-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .bank-icon {
+            width: 55px;
+            height: 55px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            background: #dceaff;
+            border-radius: 50%;
+            color: var(--primary);
+            font-size: 25px;
+        }
+
+        .summary h2 {
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .amount {
+            font-size: clamp(21px, 4vw, 29px);
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            white-space: nowrap;
+        }
+
+        .order-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 19px 22px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .order-label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .order-id-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 7px;
+        }
+
+        .order-id {
+            color: #637796;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .copy-button {
+            border: 0;
+            padding: 4px 7px;
+            border-radius: 6px;
+            color: var(--primary);
+            background: #eef4ff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 30px;
+            padding: 8px 12px;
+            background: #eaf2ff;
+            color: #1760d5;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status.success {
+            background: #e7f8ef;
+            color: var(--success);
+        }
+
+        .status.error {
+            background: #fff0f1;
+            color: var(--danger);
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 25px 0;
+        }
+
+        .methods-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .methods-heading h3 {
+            font-size: 16px;
+        }
+
+        .methods-heading span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .methods {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .method {
+            min-height: 125px;
+            padding: 16px 13px;
+            text-align: left;
+            border: 1px solid #dfe7f3;
+            border-radius: 14px;
+            background: white;
+            color: var(--text);
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+
+        .method:hover {
+            border-color: #93b5ff;
+            transform: translateY(-2px);
+        }
+
+        .method.selected {
+            border: 2px solid var(--primary);
+            padding: 15px 12px;
+            background: #f3f7ff;
+        }
+
+        .method-icon {
+            display: block;
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .method strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .method small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .pay-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 13px;
+            width: 100%;
+            padding: 18px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(100deg, #145cf2, #2867ff);
+            color: white;
+            font-size: 18px;
+            font-weight: 750;
+            cursor: pointer;
+            box-shadow: 0 9px 23px rgba(34, 96, 240, 0.22);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+        }
+
+        .pay-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 13px 28px rgba(34, 96, 240, 0.3);
+        }
+
+        .pay-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .pay-arrow {
+            font-size: 22px;
+        }
+
+        #message {
+            display: none;
+            margin-top: 16px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            background: #f0f5ff;
+            color: #315789;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        #message.visible {
+            display: block;
+        }
+
+        #message.error {
+            background: #fff0f1;
+            color: var(--danger);
+        }
+
+        #message.success {
+            background: #e7f8ef;
+            color: var(--success);
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            margin-top: 27px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .footer strong {
+            color: #2456b4;
+            font-style: italic;
+        }
+
+        .footer-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .fine-print {
+            margin-top: 17px;
+            text-align: center;
+            color: #94a1b5;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 15px 18px;
+            }
+
+            .brand {
+                font-size: 16px;
+                gap: 8px;
+            }
+
+            .brand-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 20px;
+            }
+
+            .security-header {
+                gap: 7px;
+            }
+
+            .lock-icon {
+                width: 34px;
+                height: 34px;
+            }
+
+            .security-header strong {
+                font-size: 12px;
+            }
+
+            .security-header span {
+                font-size: 10px;
+            }
+
+            main {
+                padding: 25px 12px 35px;
+            }
+
+            .checkout-card {
+                padding: 23px 17px;
+                border-radius: 18px;
+            }
+
+            .summary {
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .bank-icon {
+                width: 43px;
+                height: 43px;
+                font-size: 21px;
+            }
+
+            .summary-left {
+                gap: 10px;
+            }
+
+            .summary h2 {
+                font-size: 14px;
+            }
+
+            .summary .muted {
+                font-size: 11px;
+            }
+
+            .order-box {
+                padding: 15px;
+                align-items: flex-start;
+            }
+
+            .status {
+                white-space: normal;
+                text-align: center;
+            }
+
+            .methods {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .methods-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .pay-button {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .security-header span {
+                display: none;
+            }
+
+            .order-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div>Northstar <span class="brand-light">Banking</span></div>
+    </div>
+
+    <div class="security-header">
+        <div class="lock-icon">🔒</div>
+        <div>
+            <strong>Secure Checkout</strong>
+            <span>Your payments are encrypted</span>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="checkout-card">
+        <div class="heading">
+            <h1>Complete your payment</h1>
+            <p>Your transaction is encrypted and secure.</p>
+        </div>
+
+        <div class="summary">
+            <div class="summary-left">
+                <div class="bank-icon">▤</div>
+                <div>
+                    <h2>Account payment</h2>
+                    <p class="muted">Payment to your banking account</p>
+                </div>
+            </div>
+            <div class="amount" id="amountDisplay">₹1,000.00</div>
+        </div>
+
+        <div class="order-box">
+            <div>
+                <div class="order-label">Order ID</div>
+                <div class="order-id-row">
+                    <span class="order-id" id="orderIdDisplay"></span>
+                    <button class="copy-button" id="copyOrderButton"
+                            type="button">Copy</button>
+                </div>
+            </div>
+            <span class="status" id="paymentStatus">● Pending payment</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="methods-heading">
+            <h3>Choose a payment method</h3>
+            <span>🛡 All transactions are secure</span>
+        </div>
+
+        <div class="methods">
+            <button type="button" class="method selected" data-method="upi"
+                    aria-pressed="true">
+                <span class="method-icon">📲</span>
+                <strong>UPI</strong>
+                <small>Pay via any UPI app</small>
+            </button>
+
+            <button type="button" class="method" data-method="card"
+                    aria-pressed="false">
+                <span class="method-icon">💳</span>
+                <strong>Cards</strong>
+                <small>Debit / Credit cards</small>
+            </button>
+
+            <button type="button" class="method" data-method="netbanking"
+                    aria-pressed="false">
+                <span class="method-icon">🏦</span>
+                <strong>Netbanking</strong>
+                <small>All major banks</small>
+            </button>
+
+            <button type="button" class="method" data-method="wallet"
+                    aria-pressed="false">
+                <span class="method-icon">👛</span>
+                <strong>Wallet</strong>
+                <small>Pay via wallets</small>
+            </button>
+        </div>
+
+        <button type="button" class="pay-button" id="payButton">
+            <span id="payButtonText">Pay ₹1,000</span>
+            <span class="pay-arrow">→</span>
+        </button>
+
+        <div id="message" role="status" aria-live="polite"></div>
+
+        <div class="footer">
+            <div class="footer-line"></div>
+            <span>🛡 Secured by <strong>Razorpay</strong></span>
+            <div class="footer-line"></div>
+        </div>
+
+        <p class="fine-print">
+            This is a test checkout experience. Payment confirmation must
+            be verified by the banking server before the payment is marked
+            successful.
+        </p>
+    </section>
+</main>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    /*
+     * Existing payment order.
+     * No order-creation API is called by this page.
+     *
+     * For production, load this data from your backend rather than
+     * hardcoding identifiers or trusting browser-provided amounts.
+     */
+    const paymentOrder = {
+        paymentId: "196c598b-f7ff-4e09-a73c-8550b083d18b",
+        razorpayOrderId: "order_Tm8y6tf2bG8rlB",
+        accountNumber: "926563705376",
+        amount: 1000,
+        currency: "INR",
+        status: "CREATED",
+        razorpayKeyId: "rzp_test_TlFnnIEZlhaK1N"
+    };
+
+    const payButton = document.getElementById("payButton");
+    const payButtonText = document.getElementById("payButtonText");
+    const messageBox = document.getElementById("message");
+    const paymentStatus = document.getElementById("paymentStatus");
+
+    let selectedMethod = "upi";
+    let checkoutInProgress = false;
+
+    const formattedAmount = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: paymentOrder.currency,
+        minimumFractionDigits: 2
+    }).format(paymentOrder.amount);
+
+    document.getElementById("amountDisplay").textContent = formattedAmount;
+    payButtonText.textContent =
+        "Pay " + new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: paymentOrder.currency,
+            maximumFractionDigits: 0
+        }).format(paymentOrder.amount);
+
+    document.getElementById("orderIdDisplay").textContent =
+        paymentOrder.razorpayOrderId;
+
+    function showMessage(text, type = "") {
+        messageBox.textContent = text;
+        messageBox.className = "visible" + (type ? " " + type : "");
+    }
+
+    function setStatus(text, type = "") {
+        paymentStatus.textContent = text;
+        paymentStatus.className = "status" + (type ? " " + type : "");
+    }
+
+    document.querySelectorAll(".method").forEach(button => {
+        button.addEventListener("click", () => {
+            if (checkoutInProgress) return;
+
+            document.querySelectorAll(".method").forEach(item => {
+                item.classList.remove("selected");
+                item.setAttribute("aria-pressed", "false");
+            });
+
+            button.classList.add("selected");
+            button.setAttribute("aria-pressed", "true");
+            selectedMethod = button.dataset.method;
+
+            /*
+             * These tiles are a visual selection only. Razorpay Checkout
+             * determines which actual payment methods are available.
+             */
+        });
+    });
+
+    document.getElementById("copyOrderButton").addEventListener("click",
+        async () => {
+            try {
+                await navigator.clipboard.writeText(
+                    paymentOrder.razorpayOrderId
+                );
+                showMessage("Order ID copied to clipboard.", "success");
+            } catch (error) {
+                showMessage("Copy unavailable. Select the order ID to copy.");
+            }
+        }
+    );
+
+    payButton.addEventListener("click", () => {
+        if (checkoutInProgress) return;
+
+        if (typeof window.Razorpay !== "function") {
+            showMessage(
+                "Razorpay Checkout could not load. Check your internet connection and refresh.",
+                "error"
+            );
+            return;
+        }
+
+        if (!paymentOrder.razorpayOrderId ||
+            !paymentOrder.razorpayKeyId ||
+            !Number.isSafeInteger(paymentOrder.amount) ||
+            paymentOrder.amount <= 0) {
+            showMessage("The existing payment order has invalid details.", "error");
+            return;
+        }
+
+        checkoutInProgress = true;
+        payButton.disabled = true;
+        payButtonText.textContent = "Opening checkout...";
+        showMessage("Opening Razorpay's secure payment window...");
+
+        try {
+            const options = {
+                key: paymentOrder.razorpayKeyId,
+                order_id: paymentOrder.razorpayOrderId,
+                amount: paymentOrder.amount * 100,
+                currency: paymentOrder.currency,
+                name: "Northstar Banking",
+                description: "Account payment",
+                image: "",
+                prefill: {},
+                notes: {
+                    internal_payment_id: paymentOrder.paymentId
+                },
+                theme: {
+                    color: "#1764f5"
+                },
+
+                handler: function (response) {
+                    /*
+                     * A browser callback is not proof of verified payment.
+                     * Send this response to your backend's verification
+                     * endpoint before marking the payment successful.
+                     */
+                    setStatus("Verification pending");
+                    showMessage(
+                        "Checkout returned a payment response. Payment ID: " +
+                        response.razorpay_payment_id +
+                        ". Server verification is required before confirmation."
+                    );
+
+                    console.log("Internal payment ID:", paymentOrder.paymentId);
+                    console.log("Razorpay payment ID:",
+                        response.razorpay_payment_id);
+                    console.log("Razorpay order ID:",
+                        response.razorpay_order_id);
+                    console.log("Razorpay signature:",
+                        response.razorpay_signature);
+
+                    checkoutInProgress = false;
+                    payButton.disabled = false;
+                    payButtonText.textContent = "Pay again";
+                },
+
+                modal: {
+                    ondismiss: function () {
+                        checkoutInProgress = false;
+                        payButton.disabled = false;
+                        payButtonText.textContent = "Pay again";
+                        showMessage(
+                            "Checkout closed. Check payment status before retrying."
+                        );
+                    }
+                }
+            };
+
+            const checkout = new window.Razorpay(options);
+
+            checkout.on("payment.failed", function (response) {
+                checkoutInProgress = false;
+                payButton.disabled = false;
+                payButtonText.textContent = "Try payment again";
+                setStatus("Payment failed", "error");
+
+                const errorDescription =
+                    response.error && response.error.description
+                        ? response.error.description
+                        : "Please check the payment status and try again.";
+
+                showMessage("Payment failed: " + errorDescription, "error");
+
+                console.error("Razorpay payment failed:", {
+                    code: response.error && response.error.code,
+                    reason: response.error && response.error.reason,
+                    description: errorDescription
+                });
+            });
+
+            checkout.open();
+        } catch (error) {
+            checkoutInProgress = false;
+            payButton.disabled = false;
+            payButtonText.textContent = "Pay again";
+            showMessage(
+                "Could not open checkout. " + error.message,
+                "error"
+            );
+        }
+    });
+</script>
+</body>
+</html>
